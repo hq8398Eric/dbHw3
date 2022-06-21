@@ -1,0 +1,12 @@
+user : "postgres",
+host : "hw3.cwtcimdronrz.us-east-1.rds.amazonaws.com",
+name : "postgres",
+password : "rwzNJKu6VmDtGEdXOO29",
+port : 5432
+
+psql ^
+   --host=52.55.47.246 ^
+   --port=5432 ^
+   --username=postgres ^
+   --password ^
+   --dbname=postgres 
