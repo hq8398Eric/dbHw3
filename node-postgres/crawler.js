@@ -1,53 +1,73 @@
 var Crawler = require("crawler");
 var json = require("JSON")
- 
-const getTodayStocks = () => {
-    return new Promise((resolve, reject) => {
-        var c = new Crawler({
-            rateLimit : 500
-        });
 
-        let date_ob = new Date();
-        let date = ("0" + date_ob.getDate()).slice(-2);
-        let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-        let year = date_ob.getFullYear();
 
-        c.queue({uri : `https://www.twse.com.tw/exchangeReport/MI_INDEX?response=json&date=${year}${month}${date}&type=ALLBUT0999&_=1655886701026`,
-        callback : (err, res) => {
-            if(err) {
-                reject(err)
-            }
-            else {
-                var obj = json.parse(res.body)
-                resolve(obj.data9)
-            }        
-        }, jQuery : false});
-    })
+var c = new Crawler({
+	rateLimit : 3000
+})
+
+const cred = require('./cred')
+const Pool = require('pg').Pool
+const pool = new Pool({
+	user: cred.user,
+	host: cred.host,
+	database: cred.name,
+	password: cred.password,
+	port: cred.port,
+});
+
+function updateDb() {
+	return new Promise((resolve, reject) => {
+		pool.query('select max(date) from prices', (err, res) => {
+			if(err) {
+				reject(err)
+			}
+			var today = new Date()
+			var cur = res.rows[0].max
+			cur.setDate(cur.getDate() + 1)
+			while(cur.setHours(0, 0, 0, 0) < today.setHours(0, 0, 0, 0)) {
+			    let year = cur.getFullYear()
+			    let month = ("0" + (cur.getMonth() + 1)).slice(-2)
+			    let date = ("0" + cur.getDate()).slice(-2)
+			    c.queue({
+			        uri : `https://www.twse.com.tw/en/exchangeReport/MI_INDEX?response=json&date=${year}${month}${date}&type=ALLBUT0999&_=1655948244368`,
+			        jQuery : false,
+			        callback : (err, res, done) => {
+			            if(err) {
+			            	reject(err)
+			            }
+			            else {
+			                var obj = json.parse(res.body);
+			                console.log(`crawled ${obj.date}`)
+			                if(obj.stat == 'OK') {
+			                    var stockNo = obj.data9.map( ( value, index ) => { return value[0] } )
+			                    var price = obj.data9.map( ( value, index ) => { return value[7] } )
+			                    for(var i = 0; i < stockNo.length; i ++) {
+			                        // console.log(`insert into prices ( date, price, stockNo ) values ( '${year}-${month}-${date}', ${parseFloat(price[i])}, '${stockNo[i]}')`)
+			                        if(price[i] != '--') {
+			                            pool.query(`insert into prices ( date, price, stockNo ) values ( '${year}-${month}-${date}', ${parseFloat(price[i])}, '${stockNo[i]}')`, 
+			                            (err, res) => {
+			                                if(err) {
+			                                	reject(err)
+			                                }
+			                            })
+			                        }
+			                    }
+			                }
+			            }
+			            done()
+			        }
+			    })
+			    if(cur.setHours(0, 0, 0, 0) == today.setHours(0, 0, 0, 0)) {
+			        break;
+			    }
+			    cur.setDate(cur.getDate() + 1)
+			}
+			resolve()
+		})
+	})
 }
 
 module.exports = {
-    getTodayStocks
+	updateDb
 }
-// // Queue a list of URLs
-// c.queue(['http://www.google.com/','http://www.yahoo.com']);
- 
-// // Queue URLs with custom callbacks & parameters
-// c.queue([{
-//     uri: 'http://parishackers.org/',
-//     jQuery: false,
- 
-//     // The global callback won't be called
-//     callback: function (error, res, done) {
-//         if(error){
-//             console.log(error);
-//         }else{
-//             console.log('Grabbed', res.body.length, 'bytes');
-//         }
-//         done();
-//     }
-// }]);
- 
-// Queue some HTML code directly without grabbing (mostly for tests)
-// c.queue([{
-//     html: '<p>This is a <strong>test</strong></p>'
-// }]);
