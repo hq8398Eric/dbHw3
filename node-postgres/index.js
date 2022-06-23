@@ -4,6 +4,7 @@ const port = 3001
 
 const merchant_model = require('./merchant_model')
 const crawler = require('./crawler')
+const stock = require('./stockProccess')
 
 app.use(express.json())
 app.use(function (req, res, next) {
@@ -16,7 +17,7 @@ app.get('/', (req, res) => {
     res.status(200).send()
 })
 
-app.get('/updateDb', (req, res) => {
+app.get('/updateDbToDate', (req, res) => {
     crawler.updateDb()
     .then(() => {
         res.status(200).send()
@@ -25,14 +26,10 @@ app.get('/updateDb', (req, res) => {
         console.log(err)
         res.status(500).send()
     })
-    // .then((stocks) => {
-    //     console.log(stocks)
-    //     res.status(200).send(response)
-    // })
-    // .catch((err) => {
-    //     console.log(err)
-    //     res.status(500).send(error)
-    // })
+})
+
+app.get('/getPricePredicted', (req, res) => {
+
 })
 app.listen(port, () => {
     console.log(`App running on port ${port}.`)
