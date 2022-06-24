@@ -1,4 +1,30 @@
 html {
-  background-color: gray;
-  font-size: 20px;
+	background-color: AntiqueWhite;
+}
+
+.input {
+	padding:10px 0px 10px 0px;
+	background-color: #F0F8FF;
+	font-size: 20px;
+	display: flex;
+	justify-content: center; 
+    align-items: center; 
+	border:solid 1px #aacfe4;
+}
+
+h1 {
+	display: flex;
+	justify-content: center; 
+    align-items: center; 	
+}
+
+.topright {
+	position: absolute;
+
+	top: 8px;
+
+	right: 16px;
+
+	font-size : 200px
+
 }

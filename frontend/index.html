@@ -3,15 +3,43 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Stock prediction</title>
-		<link rel="stylesheet" href="myCss.css">
-		<script src="myScript.js" defer></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<style>
+			.topright {
+				position: absolute;
+				top: 50px;
+				right: 200px;
+			}
+			#predicted {
+				font-size : 20px
+			}
+		</style>
   	</head>
   	<body>
 		<h1>Stock Prediction</h1>
-		<p> Input the stock number you want to predict: </p>
-		<form>
-			<input type = "text">
-			<input type = "submit">
-		</form>
+		<div class = "input">
+			<p> Input the stock number you want to predict: </p>
+			<input type = "text" id = "inputBox">
+			<button id = "submitButton"> Submit </button>
+		</div>
+		<div class = "topright">
+			<p> The predicted price is : </p>
+			<p id = "predicted"></p>
+		</div>
+		<table class="table table-striped">
+		    <tr  class="bg-info">
+		        <th>StockNo</th>
+		        <th>StockName</th>
+		        <th>Price</th>
+		        <th>Date</th>
+		    </tr>
+
+		    <tbody id="myTable">
+		        
+		    </tbody>
+		</table>
+		<script src="./myScript.js"></script>
   	</body>
 </html>
