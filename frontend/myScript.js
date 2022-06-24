@@ -26,7 +26,7 @@ document.getElementById("submitButton").addEventListener("click", () => {
 		return obj
 	})
 	.then((res) => {
-		console.log(res)
+		// console.log(res)
 		buildTable(res)
 		var tot = (1 + res.length) * res.length / 2;
 		var r = 0;
@@ -36,6 +36,7 @@ document.getElementById("submitButton").addEventListener("click", () => {
 		document.getElementById("predicted").innerHTML = r.toString()
 	})
 	.catch((err) => {
+		alert('StockNo does not exist')
 		console.log(err)
 	})
 })

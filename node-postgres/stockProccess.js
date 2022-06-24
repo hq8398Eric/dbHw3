@@ -13,6 +13,7 @@ function getStock(stockNo) {
 		pool.query(`select * from prices natural join no2name where stockNo = '${stockNo}' order by date`)
 		.then((res) => {
 			resolve(res.rows)
+			console.log(res.rows.length)
 		})
 		.catch((err) => {
 			console.log('test')

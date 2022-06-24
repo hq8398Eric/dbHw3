@@ -29,6 +29,7 @@ function updateDb() {
 			    let year = cur.getFullYear()
 			    let month = ("0" + (cur.getMonth() + 1)).slice(-2)
 			    let date = ("0" + cur.getDate()).slice(-2)
+				console.log(`${year}${month}${date}`)
 			    c.queue({
 			        uri : `https://www.twse.com.tw/en/exchangeReport/MI_INDEX?response=json&date=${year}${month}${date}&type=ALLBUT0999&_=1655948244368`,
 			        jQuery : false,

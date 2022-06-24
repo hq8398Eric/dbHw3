@@ -4,13 +4,22 @@
 		<meta charset="utf-8">
 		<title>Stock prediction</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script>
+			fetch(`http://localhost:3001/updateDbToDate`)
+			.then((res) => {
+				console.log('Db up to date')
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+		</script>
 
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<style>
 			.topright {
 				position: absolute;
 				top: 50px;
-				right: 200px;
+				right: 500px;
 			}
 			#predicted {
 				font-size : 20px
